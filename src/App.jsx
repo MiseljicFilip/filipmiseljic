@@ -19,7 +19,7 @@ function App() {
   });
 
   useEffect(() => {
-    const saved = localStorage.getItem("displayMode");
+    let saved = localStorage.getItem("displayMode");
     if (!saved) {
       saved = "dark"
       setDarkMode(true);
