@@ -19,10 +19,11 @@ const ACCENT_KEY = "accent";
 
 const ACCENTS = ["blue", "purple", "green"];
 
+/** User's explicit choice: "light" | "dark" | null (null = follow system preference) */
 function getStoredTheme() {
   const saved = localStorage.getItem(THEME_KEY);
-  if (saved === "light" || saved === "dark" || saved === "system") return saved;
-  return "system";
+  if (saved === "light" || saved === "dark") return saved;
+  return null; // no preference → follow system (no "system" stored)
 }
 
 function getStoredAccent() {
@@ -31,9 +32,9 @@ function getStoredAccent() {
   return "blue";
 }
 
-function getResolvedTheme() {
-  const stored = getStoredTheme();
-  if (stored !== "system") return stored;
+/** Resolved theme to apply: always "light" or "dark". Uses system when stored is null. */
+function getResolvedTheme(stored) {
+  if (stored === "light" || stored === "dark") return stored;
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
@@ -41,41 +42,43 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [theme, setTheme] = useState(getStoredTheme);
-  const [resolvedTheme, setResolvedTheme] = useState(getResolvedTheme);
   const [accent, setAccent] = useState(getStoredAccent);
+  const [systemResolved, setSystemResolved] = useState(() => getResolvedTheme(null));
+  const resolvedTheme = theme !== null ? theme : systemResolved;
 
   useEffect(() => {
-    const resolved = getResolvedTheme();
-    setResolvedTheme(resolved);
-    document.documentElement.setAttribute("data-theme", resolved);
-  }, [theme]);
+    document.documentElement.setAttribute("data-theme", resolvedTheme);
+  }, [resolvedTheme]);
 
   useEffect(() => {
     document.documentElement.setAttribute("data-accent", accent);
   }, [accent]);
 
+  // When user hasn't chosen a theme, follow system preference (e.g. OS dark mode change)
   useEffect(() => {
+    if (theme !== null) return;
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     const handleChange = () => {
-      if (theme === "system") {
-        const resolved = getResolvedTheme();
-        setResolvedTheme(resolved);
-        document.documentElement.setAttribute("data-theme", resolved);
-      }
+      const resolved = getResolvedTheme(null);
+      setSystemResolved(resolved);
+      document.documentElement.setAttribute("data-theme", resolved);
     };
+    setSystemResolved(getResolvedTheme(null)); // sync when following system
     media.addEventListener("change", handleChange);
     return () => media.removeEventListener("change", handleChange);
   }, [theme]);
 
   const setThemeAndPersist = (next) => {
     setTheme(next);
-    localStorage.setItem(THEME_KEY, next);
+    if (next === null) localStorage.removeItem(THEME_KEY);
+    else localStorage.setItem(THEME_KEY, next);
   };
 
   const cycleTheme = () => {
-    const order = ["light", "dark", "system"];
-    const i = order.indexOf(theme);
-    setThemeAndPersist(order[(i + 1) % order.length]);
+    const order = ["light", "dark"];
+    const current = theme ?? getResolvedTheme(null);
+    const next = order[(order.indexOf(current) + 1) % order.length];
+    setThemeAndPersist(next);
   };
 
   const cycleAccent = () => {

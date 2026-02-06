@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Sun, Moon, Monitor, FileDown, Palette } from "lucide-react";
+import { Sun, Moon, FileDown, Palette } from "lucide-react";
 import { SITE } from "../data/site";
 
 const NAV_LINKS = [
@@ -15,12 +15,7 @@ export const Navbar = ({ menuOpen, setMenuOpen, theme, resolvedTheme, onCycleThe
     document.body.style.overflow = menuOpen ? "hidden" : "";
   }, [menuOpen]);
 
-  const themeLabel =
-    theme === "system"
-      ? "System theme"
-      : resolvedTheme === "dark"
-        ? "Dark mode"
-        : "Light mode";
+  const themeLabel = resolvedTheme === "dark" ? "Dark mode" : "Light mode";
 
   return (
     <nav
@@ -81,9 +76,7 @@ export const Navbar = ({ menuOpen, setMenuOpen, theme, resolvedTheme, onCycleThe
               title={themeLabel}
               className="ml-1 p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             >
-              {theme === "system" ? (
-                <Monitor className="size-5" aria-hidden />
-              ) : resolvedTheme === "dark" ? (
+              {resolvedTheme === "dark" ? (
                 <Moon className="size-5" aria-hidden />
               ) : (
                 <Sun className="size-5" aria-hidden />

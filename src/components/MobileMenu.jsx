@@ -1,4 +1,4 @@
-import { Sun, Moon, Monitor, X, FileDown, Palette } from "lucide-react";
+import { Sun, Moon, X, FileDown, Palette } from "lucide-react";
 import { SITE } from "../data/site";
 
 const NAV_LINKS = [
@@ -10,12 +10,7 @@ const NAV_LINKS = [
 ];
 
 export const MobileMenu = ({ menuOpen, setMenuOpen, theme, resolvedTheme, onCycleTheme, accent, onCycleAccent }) => {
-  const themeLabel =
-    theme === "system"
-      ? "System theme"
-      : resolvedTheme === "dark"
-        ? "Dark mode"
-        : "Light mode";
+  const themeLabel = resolvedTheme === "dark" ? "Dark mode" : "Light mode";
 
   return (
     <div
@@ -41,9 +36,7 @@ export const MobileMenu = ({ menuOpen, setMenuOpen, theme, resolvedTheme, onCycl
           title={themeLabel}
           className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          {theme === "system" ? (
-            <Monitor className="size-6" aria-hidden />
-          ) : resolvedTheme === "dark" ? (
+          {resolvedTheme === "dark" ? (
             <Moon className="size-6" aria-hidden />
           ) : (
             <Sun className="size-6" aria-hidden />
