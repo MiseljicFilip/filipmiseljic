@@ -1,81 +1,92 @@
-import { Sun, Moon } from "lucide-react";
+import { Sun, Moon, Monitor, X, FileDown, Palette } from "lucide-react";
+import { SITE } from "../data/site";
 
-export const MobileMenu = ({ menuOpen, setMenuOpen, toggleDisplayMode, darkMode}) => {
+const NAV_LINKS = [
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Projects", href: "#projects" },
+  { label: "Testimonials", href: "#testimonials" },
+  { label: "Contact", href: "#contact" },
+];
+
+export const MobileMenu = ({ menuOpen, setMenuOpen, theme, resolvedTheme, onCycleTheme, accent, onCycleAccent }) => {
+  const themeLabel =
+    theme === "system"
+      ? "System theme"
+      : resolvedTheme === "dark"
+        ? "Dark mode"
+        : "Light mode";
+
   return (
-    <>
-      <div
-        className={`fixed top-0 left-0 w-full bg-[rgb(10,10,10,.95)] z-40 flex flex-col items-center justify-center transition-all ease-in-out duration-300 
-        ${
-          menuOpen
-            ? "h-screen opacity-100 pointer-events-auto"
-            : "h-0 opacity-0 pointer-events-none"
-        }
-        `}
-      >
+    <div
+      className={`fixed inset-0 z-40 bg-background/95 backdrop-blur-xl flex flex-col items-center justify-center transition-all duration-300 ease-out ${
+        menuOpen ? "opacity-100 visible" : "opacity-0 invisible"
+      }`}
+      aria-hidden={!menuOpen}
+    >
+      <div className="absolute top-6 left-6 flex items-center gap-1">
         <button
-  type="button"
-  onClick={toggleDisplayMode}
-  aria-label={darkMode ? "Switch to light mode" : "Switch to dark mode"}
-  title={darkMode ? "Light mode" : "Dark mode"}
-  className="absolute top-6 left-6
-    inline-flex items-center justify-center
-    h-9 w-9 rounded-4xl 
-     
-     hover:bg-gray-700 text-gray-100
-    transition-colors
-  "
->
-  {darkMode ? (
-    <Sun className="h-5 w-5" />
-  ) : (
-    <Moon className="h-5 w-5" />
-  )}
-</button>
-        <button
-          onClick={() => setMenuOpen(false)}
-          className="absolute top-6 right-6 text-white text-3xl focus:outline-none cursor-pointer"
-          aria-label="Close Menu"
+          type="button"
+          onClick={onCycleAccent}
+          aria-label={`Accent: ${accent}`}
+          title={`Accent: ${accent}`}
+          className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          &times;
+          <Palette className="size-6" aria-hidden />
         </button>
-
-        <a
-          href="#home"
-          className={` text-2xl text-white transition-transform duration-300 my-4 font-semibold ${
-            menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
-          onClick={() => setMenuOpen(false)}
+        <button
+          type="button"
+          onClick={onCycleTheme}
+          aria-label={`Theme: ${themeLabel}`}
+          title={themeLabel}
+          className="p-2 rounded-lg text-muted hover:text-foreground hover:bg-surface transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
-          Home
-        </a>
-        <a
-          href="#about"
-          className={` text-2xl text-white transition-transform duration-300 my-4 font-semibold ${
-            menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
-          onClick={() => setMenuOpen(false)}
-        >
-          About
-        </a>
-        <a
-          href="#projects"
-          className={` text-2xl text-white transition-transform duration-300 my-4 font-semibold ${
-            menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
-          onClick={() => setMenuOpen(false)}
-        >
-          Projects
-        </a>
-        <a
-          href="#contact"
-          className={` text-2xl text-white transition-transform duration-300 my-4 font-semibold ${
-            menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
-          }`}
-          onClick={() => setMenuOpen(false)}
-        >
-          Contact
-        </a>
+          {theme === "system" ? (
+            <Monitor className="size-6" aria-hidden />
+          ) : resolvedTheme === "dark" ? (
+            <Moon className="size-6" aria-hidden />
+          ) : (
+            <Sun className="size-6" aria-hidden />
+          )}
+        </button>
       </div>
-    </>
+      <button
+        type="button"
+        onClick={() => setMenuOpen(false)}
+        className="absolute top-6 right-6 p-2 rounded-lg text-foreground hover:bg-surface transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        aria-label="Close menu"
+      >
+        <X className="size-6" aria-hidden />
+      </button>
+
+      <nav className="flex flex-col items-center gap-2" aria-label="Mobile menu">
+        {NAV_LINKS.map((link, i) => (
+          <a
+            key={link.href}
+            href={link.href}
+            className={`text-xl font-medium text-foreground py-3 px-4 rounded-lg hover:bg-surface transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+              menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+            }`}
+            style={menuOpen ? { transitionDelay: `${40 * (i + 1)}ms` } : undefined}
+            onClick={() => setMenuOpen(false)}
+          >
+            {link.label}
+          </a>
+        ))}
+        <a
+          href={SITE.resumePdfUrl}
+          download={SITE.resumeDownloadName}
+          className={`inline-flex items-center gap-2 text-xl font-medium text-primary py-3 px-4 rounded-lg hover:bg-surface transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+            menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
+          }`}
+          style={menuOpen ? { transitionDelay: "200ms" } : undefined}
+          onClick={() => setMenuOpen(false)}
+          aria-label="Download resume (PDF)"
+        >
+          <FileDown className="size-5" aria-hidden />
+          Download CV
+        </a>
+      </nav>
+    </div>
   );
 };
