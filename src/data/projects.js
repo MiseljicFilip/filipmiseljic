@@ -1,8 +1,3 @@
-/**
- * Featured projects data. Edit here to add/update projects.
- * - type: used for filter chips (e.g. "Full-stack", "UI", "Frontend").
- * - tech: used for filter chips and displayed on each card.
- */
 export const PROJECTS = [
   {
     id: "Redux From Scratch",
@@ -26,8 +21,6 @@ export const PROJECTS = [
   },
 ];
 
-/** All unique types across projects (for filter UI). Sorted. */
 export const PROJECT_TYPES = [...new Set(PROJECTS.map((p) => p.type))].sort();
 
-/** All unique tech across projects (for filter UI). Sorted. */
 export const PROJECT_TECH = [...new Set(PROJECTS.flatMap((p) => p.tech))].sort();

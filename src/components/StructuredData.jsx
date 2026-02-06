@@ -50,10 +50,6 @@ function buildBreadcrumbSchema() {
   };
 }
 
-/**
- * Injects JSON-LD structured data into document head for SEO (Person, WebSite, BreadcrumbList).
- * Renders nothing in the DOM; runs once on mount.
- */
 export function StructuredData() {
   useEffect(() => {
     const schemas = [

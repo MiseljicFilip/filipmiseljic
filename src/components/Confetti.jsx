@@ -7,9 +7,6 @@ function randomBetween(min, max) {
   return min + Math.random() * (max - min);
 }
 
-/**
- * Lightweight confetti burst. Mount when form succeeds; parent unmounts after ~2.5s.
- */
 export function Confetti() {
   const [particles] = useState(() =>
     Array.from({ length: PARTICLE_COUNT }, () => ({

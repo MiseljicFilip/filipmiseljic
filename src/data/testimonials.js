@@ -1,11 +1,3 @@
-/**
- * Testimonials / recommendations for the portfolio.
- * Replace with real quotes, names, roles, and optional photo/LinkedIn.
- * - photo: image URL (e.g. from LinkedIn or a hosted avatar). Omit for initials fallback.
- * - linkedinUrl: full LinkedIn profile URL. Optional.
- *
- * TODO: Replace the sample entries below with real recommendations from colleagues or managers.
- */
 export const TESTIMONIALS = [
   {
     id: "t1",
@@ -21,9 +13,9 @@ export const TESTIMONIALS = [
     id: "t2",
     quote:
       "Working with Filip on the frontend was smooth—he asks the right questions and ships on time. Would work with again.",
-    name: "Alex Johnson",
-    role: "Product Manager",
-    company: "Startup Co.",
+    name: "Luka Ristic ",
+    role: "Fullstack developer",
+    company: "Transatlantic Digital",
     photo: null,
     linkedinUrl: null,
   },

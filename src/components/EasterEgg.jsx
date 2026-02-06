@@ -2,13 +2,13 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { Confetti } from "./Confetti";
 import { Sparkles } from "lucide-react";
 
-const KONAMI = [38, 38, 40, 40, 37, 39, 37, 39]; // up up down down left right left right
+const SECRET_CODE = "secret";
 const EGG_EVENT = "easter-egg-trigger";
 
 const MESSAGES = {
-  konami: {
-    title: "You found the Konami code!",
-    subtitle: "Classic move. Thanks for exploring.",
+  secret: {
+    title: "You found the secret!",
+    subtitle: "Thanks for exploring.",
   },
   resume: {
     title: "Resume mode activated.",
@@ -16,22 +16,19 @@ const MESSAGES = {
   },
   hint: {
     title: "You found the secret!",
-    subtitle: "Next time try the Konami code: ↑ ↑ ↓ ↓ ← → ← →",
+    subtitle: `Next time try typing "${SECRET_CODE}" on the page.`,
   },
 };
 
-function useKonami(onMatch) {
+function useSecretCode(onMatch) {
   useEffect(() => {
-    let index = 0;
+    let buffer = "";
     const handleKeyDown = (e) => {
-      if (e.keyCode === KONAMI[index]) {
-        index++;
-        if (index === KONAMI.length) {
-          onMatch("konami");
-          index = 0;
-        }
-      } else {
-        index = 0;
+      if (e.key.length !== 1) return;
+      buffer = (buffer + e.key.toLowerCase()).slice(-SECRET_CODE.length);
+      if (buffer === SECRET_CODE) {
+        onMatch("secret");
+        buffer = "";
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -56,7 +53,7 @@ export function EasterEgg() {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
   }, []);
 
-  useKonami(activate);
+  useSecretCode(activate);
 
   useEffect(() => {
     const handleTrigger = () => activate("hint");
@@ -110,7 +107,6 @@ export function EasterEgg() {
   );
 }
 
-/** Call from anywhere to trigger the Easter egg (e.g. footer hint link). */
 export function triggerEasterEgg() {
   document.dispatchEvent(new CustomEvent(EGG_EVENT));
 }
